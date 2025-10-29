@@ -54,7 +54,7 @@ const Index = () => {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold text-foreground mb-1">
-              StepReward
+              StrollScroll
             </h1>
             <p className="text-muted-foreground">
               Turn your steps into screen time
