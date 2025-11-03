@@ -15,10 +15,15 @@ export const AchievementsSheet = ({ achievements }: AchievementsSheetProps) => {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant="outline" className="gap-2">
-          <Award className="w-4 h-4" />
-          Achievements
-          <Badge variant="secondary" className="ml-1">
+        <Button 
+          variant="default" 
+          size="lg"
+          className="gap-2 bg-gradient-to-r from-primary to-primary-glow shadow-glow interactive-card border-0 relative overflow-hidden group"
+        >
+          <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+          <Award className="w-5 h-5 text-white group-hover:rotate-12 transition-transform" />
+          <span className="font-semibold text-white">View Achievements</span>
+          <Badge variant="secondary" className="ml-1 bg-white/20 text-white border-0 group-hover:scale-110 transition-transform">
             {unlockedCount}/{achievements.length}
           </Badge>
         </Button>
