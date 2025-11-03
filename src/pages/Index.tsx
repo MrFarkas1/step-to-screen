@@ -4,14 +4,14 @@ import { MobileScreenTime } from "@/components/MobileScreenTime";
 import { MobileStats } from "@/components/MobileStats";
 import { MobileConversionRate } from "@/components/MobileConversionRate";
 import { ConversionRateDialog } from "@/components/ConversionRateDialog";
+import { SettingsSheet } from "@/components/SettingsSheet";
 import { toast } from "sonner";
 
 const Index = () => {
   const [steps, setSteps] = useState(3847);
   const [stepsPerMinute, setStepsPerMinute] = useState(100);
+  const [dailyGoal, setDailyGoal] = useState(10000);
   const [dialogOpen, setDialogOpen] = useState(false);
-  
-  const dailyGoal = 10000;
   const screenTimeMinutes = Math.floor(steps / stepsPerMinute);
   const earnedToday = screenTimeMinutes;
   
@@ -41,13 +41,21 @@ const Index = () => {
     <div className="min-h-screen bg-background pb-safe">
       <div className="max-w-md mx-auto">
         {/* Header */}
-        <div className="px-6 pt-safe pt-8 pb-4">
-          <h1 className="text-2xl font-bold text-foreground">
-            StrollScroll
-          </h1>
-          <p className="text-sm text-muted-foreground">
-            Turn your steps into screen time
-          </p>
+        <div className="px-6 pt-safe pt-8 pb-4 flex items-start justify-between">
+          <div>
+            <h1 className="text-2xl font-bold text-foreground">
+              StrollScroll
+            </h1>
+            <p className="text-sm text-muted-foreground">
+              Turn your steps into screen time
+            </p>
+          </div>
+          <SettingsSheet
+            stepsPerMinute={stepsPerMinute}
+            onRateChange={handleRateChange}
+            dailyGoal={dailyGoal}
+            onGoalChange={(value) => setDailyGoal(value)}
+          />
         </div>
 
         {/* Main Content */}
