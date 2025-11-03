@@ -1,5 +1,11 @@
+import { useState } from "react";
 import { Progress } from "@/components/ui/progress";
-import { TrendingUp } from "lucide-react";
+import { TrendingUp, Activity, Calendar, Target } from "lucide-react";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 interface MobileStepCounterProps {
   steps: number;
@@ -7,17 +13,24 @@ interface MobileStepCounterProps {
 }
 
 export const MobileStepCounter = ({ steps, dailyGoal }: MobileStepCounterProps) => {
+  const [open, setOpen] = useState(false);
   const progress = (steps / dailyGoal) * 100;
   const remaining = Math.max(0, dailyGoal - steps);
   const isGoalMet = steps >= dailyGoal;
+  
+  const weeklyAverage = 8234;
+  const monthlyTotal = 245678;
+  const bestDay = 12847;
 
   return (
     <div className="relative">
       {/* Main Circle Display */}
-      <div className="flex flex-col items-center justify-center py-12">
-        <div className="relative w-64 h-64">
-          {/* Circular Progress */}
-          <svg className="w-64 h-64 transform -rotate-90">
+      <Popover open={open} onOpenChange={setOpen}>
+        <PopoverTrigger asChild>
+          <div className="flex flex-col items-center justify-center py-12 interactive-card rounded-2xl">
+            <div className="relative w-64 h-64">
+              {/* Circular Progress */}
+              <svg className="w-64 h-64 transform -rotate-90">
             <circle
               cx="128"
               cy="128"
@@ -71,6 +84,58 @@ export const MobileStepCounter = ({ steps, dailyGoal }: MobileStepCounterProps) 
           </div>
         )}
       </div>
+    </PopoverTrigger>
+    
+    <PopoverContent className="w-80">
+      <div className="space-y-4">
+        <div className="flex items-center gap-2 border-b pb-2">
+          <Activity className="w-5 h-5 text-primary" />
+          <h3 className="font-semibold text-foreground">Step Statistics</h3>
+        </div>
+        
+        <div className="space-y-3">
+          <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+            <div className="flex items-center gap-2">
+              <Target className="w-4 h-4 text-primary" />
+              <span className="text-sm text-muted-foreground">Daily Goal</span>
+            </div>
+            <span className="font-semibold text-foreground">{dailyGoal.toLocaleString()}</span>
+          </div>
+          
+          <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+            <div className="flex items-center gap-2">
+              <Calendar className="w-4 h-4 text-primary" />
+              <span className="text-sm text-muted-foreground">Weekly Average</span>
+            </div>
+            <span className="font-semibold text-foreground">{weeklyAverage.toLocaleString()}</span>
+          </div>
+          
+          <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+            <div className="flex items-center gap-2">
+              <TrendingUp className="w-4 h-4 text-primary" />
+              <span className="text-sm text-muted-foreground">Best Day</span>
+            </div>
+            <span className="font-semibold text-foreground">{bestDay.toLocaleString()}</span>
+          </div>
+          
+          <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+            <div className="flex items-center gap-2">
+              <Activity className="w-4 h-4 text-primary" />
+              <span className="text-sm text-muted-foreground">Monthly Total</span>
+            </div>
+            <span className="font-semibold text-foreground">{monthlyTotal.toLocaleString()}</span>
+          </div>
+        </div>
+        
+        <div className="pt-2 border-t">
+          <Progress value={progress} className="h-2" />
+          <p className="text-xs text-muted-foreground mt-2 text-center">
+            {progress.toFixed(1)}% of daily goal
+          </p>
+        </div>
+      </div>
+    </PopoverContent>
+  </Popover>
     </div>
   );
 };

@@ -123,3 +123,17 @@ All colors MUST be HSL.
     @apply bg-background text-foreground;
   }
 }
+
+@layer utilities {
+  .interactive-card {
+    @apply cursor-pointer transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] hover:shadow-glow;
+  }
+  
+  .interactive-icon {
+    @apply cursor-pointer transition-all duration-300 hover:scale-110 active:scale-95;
+  }
+  
+  .icon-glow {
+    @apply animate-pulse;
+  }
+}
