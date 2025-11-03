@@ -11,7 +11,9 @@ import { WeeklyChallengeCard } from "@/components/WeeklyChallengeCard";
 import { AchievementsSheet } from "@/components/AchievementsSheet";
 import { SurpriseBonusDialog } from "@/components/SurpriseBonusDialog";
 import { CreditsDisplay } from "@/components/CreditsDisplay";
+import { MinigameDialog } from "@/components/MinigameDialog";
 import { useGamification } from "@/hooks/useGamification";
+import { useMinigames } from "@/hooks/useMinigames";
 import { toast } from "sonner";
 
 const Index = () => {
@@ -19,8 +21,10 @@ const Index = () => {
   const [stepsPerMinute, setStepsPerMinute] = useState(100);
   const [dailyGoal, setDailyGoal] = useState(10000);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [minigameOpen, setMinigameOpen] = useState(false);
   
   const gamification = useGamification(steps, dailyGoal);
+  const minigames = useMinigames();
   
   const screenTimeMinutes = Math.floor(steps / stepsPerMinute);
   const earnedToday = screenTimeMinutes;
@@ -46,19 +50,42 @@ const Index = () => {
     toast.success(`Conversion rate updated to ${newRate} steps per minute`);
   };
 
+  const handleMinigameComplete = (credits: number, gameType: "catcher" | "race") => {
+    // Credits are awarded through local state update
+    const currentCredits = parseInt(localStorage.getItem("strollscroll-credits") || "0");
+    const newCredits = currentCredits + credits;
+    localStorage.setItem("strollscroll-credits", newCredits.toString());
+    
+    if (gameType === "catcher") {
+      minigames.markStepCatcherPlayed();
+    } else {
+      minigames.markStepRacePlayed();
+    }
+    
+    // Force a re-render by updating a dummy state
+    setTimeout(() => window.location.reload(), 1500);
+  };
+
   return (
     <div className="min-h-screen bg-background pb-safe">
       <div className="max-w-md mx-auto">
         {/* Header */}
         <div className="px-6 pt-safe pt-8 pb-4 flex items-start justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-foreground">
+          <button 
+            onClick={() => setMinigameOpen(true)}
+            className="group relative"
+            title="✨ Hidden Games"
+          >
+            <h1 className="text-2xl font-bold text-foreground transition-all group-hover:text-primary group-hover:scale-105 cursor-pointer">
               StrollScroll
             </h1>
             <p className="text-sm text-muted-foreground">
               Turn your steps into screen time
             </p>
-          </div>
+            <span className="absolute -top-2 -right-2 text-xs opacity-0 group-hover:opacity-100 transition-opacity animate-pulse">
+              ✨
+            </span>
+          </button>
           <SettingsSheet
             stepsPerMinute={stepsPerMinute}
             onRateChange={handleRateChange}
@@ -118,6 +145,15 @@ const Index = () => {
       <SurpriseBonusDialog
         open={gamification.showSurpriseBonus}
         onOpenChange={gamification.setShowSurpriseBonus}
+      />
+
+      <MinigameDialog
+        open={minigameOpen}
+        onOpenChange={setMinigameOpen}
+        canPlayStepCatcher={minigames.canPlayStepCatcher}
+        canPlayStepRace={minigames.canPlayStepRace}
+        onStepCatcherComplete={(credits) => handleMinigameComplete(credits, "catcher")}
+        onStepRaceComplete={(credits) => handleMinigameComplete(credits, "race")}
       />
     </div>
   );
