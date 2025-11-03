@@ -7,12 +7,38 @@ const STORAGE_KEY = "strollscroll_gamification";
 
 const getInitialData = (): GamificationData => {
   const stored = localStorage.getItem(STORAGE_KEY);
-  if (stored) {
-    return JSON.parse(stored);
-  }
-
   const today = new Date().toISOString().split("T")[0];
   const weekStart = getWeekStart();
+
+  if (stored) {
+    const parsed = JSON.parse(stored);
+    
+    // Merge stored achievement progress with fresh definitions (which include condition functions)
+    const mergedAchievements = achievementDefinitions.map((def) => {
+      const stored = parsed.achievements?.find((a: Achievement) => a.id === def.id);
+      return {
+        ...def,
+        unlocked: stored?.unlocked || false,
+        unlockedAt: stored?.unlockedAt,
+      };
+    });
+
+    return {
+      ...parsed,
+      achievements: mergedAchievements,
+      dailyQuest: parsed.dailyQuest?.date === today ? parsed.dailyQuest : generateDailyQuest(today),
+      weeklyChallenge: parsed.weeklyChallenge?.weekStart === weekStart 
+        ? parsed.weeklyChallenge 
+        : {
+            description: "Walk 50,000 steps this week",
+            target: 50000,
+            current: 0,
+            reward: 50,
+            completed: false,
+            weekStart,
+          },
+    };
+  }
 
   return {
     currentStreak: 0,
