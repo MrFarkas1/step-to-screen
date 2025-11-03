@@ -1,0 +1,68 @@
+import { Achievement, GamificationData } from "@/types/gamification";
+
+export const achievementDefinitions: Omit<Achievement, 'unlocked' | 'unlockedAt'>[] = [
+  {
+    id: "first_steps",
+    title: "First Steps",
+    description: "Take your first 1,000 steps",
+    icon: "👣",
+    reward: 10,
+    condition: (data: GamificationData) => data.totalStepsAllTime >= 1000,
+  },
+  {
+    id: "ten_k_day",
+    title: "10K Champion",
+    description: "Walk 10,000 steps in a single day",
+    icon: "🏆",
+    reward: 30,
+    condition: (data: GamificationData) => data.totalStepsAllTime >= 10000,
+  },
+  {
+    id: "three_day_streak",
+    title: "Getting Consistent",
+    description: "Maintain a 3-day streak",
+    icon: "🔥",
+    reward: 20,
+    condition: (data: GamificationData) => data.currentStreak >= 3,
+  },
+  {
+    id: "seven_day_streak",
+    title: "Week Warrior",
+    description: "Maintain a 7-day streak",
+    icon: "💪",
+    reward: 50,
+    condition: (data: GamificationData) => data.currentStreak >= 7,
+  },
+  {
+    id: "weekly_50k",
+    title: "Weekly Walker",
+    description: "Walk 50,000 steps in a week",
+    icon: "⭐",
+    reward: 40,
+    condition: (data: GamificationData) => data.weeklySteps >= 50000,
+  },
+  {
+    id: "fifteen_day_streak",
+    title: "Dedication Master",
+    description: "Maintain a 15-day streak",
+    icon: "🌟",
+    reward: 75,
+    condition: (data: GamificationData) => data.currentStreak >= 15,
+  },
+  {
+    id: "thirty_day_streak",
+    title: "Monthly Legend",
+    description: "Maintain a 30-day streak",
+    icon: "👑",
+    reward: 150,
+    condition: (data: GamificationData) => data.currentStreak >= 30,
+  },
+  {
+    id: "hundred_k_total",
+    title: "Century Club",
+    description: "Walk 100,000 total steps",
+    icon: "💎",
+    reward: 60,
+    condition: (data: GamificationData) => data.totalStepsAllTime >= 100000,
+  },
+];

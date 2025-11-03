@@ -5,6 +5,13 @@ import { MobileStats } from "@/components/MobileStats";
 import { MobileConversionRate } from "@/components/MobileConversionRate";
 import { ConversionRateDialog } from "@/components/ConversionRateDialog";
 import { SettingsSheet } from "@/components/SettingsSheet";
+import { StreakWidget } from "@/components/StreakWidget";
+import { DailyQuestCard } from "@/components/DailyQuestCard";
+import { WeeklyChallengeCard } from "@/components/WeeklyChallengeCard";
+import { AchievementsSheet } from "@/components/AchievementsSheet";
+import { SurpriseBonusDialog } from "@/components/SurpriseBonusDialog";
+import { CreditsDisplay } from "@/components/CreditsDisplay";
+import { useGamification } from "@/hooks/useGamification";
 import { toast } from "sonner";
 
 const Index = () => {
@@ -12,13 +19,15 @@ const Index = () => {
   const [stepsPerMinute, setStepsPerMinute] = useState(100);
   const [dailyGoal, setDailyGoal] = useState(10000);
   const [dialogOpen, setDialogOpen] = useState(false);
+  
+  const gamification = useGamification(steps, dailyGoal);
+  
   const screenTimeMinutes = Math.floor(steps / stepsPerMinute);
   const earnedToday = screenTimeMinutes;
   
   // Quick stats
   const weeklyAverage = 8234;
-  const streak = 7;
-  const totalEarned = 456;
+  const totalEarned = screenTimeMinutes;
 
   // Simulate steps increasing
   useEffect(() => {
@@ -59,7 +68,7 @@ const Index = () => {
         </div>
 
         {/* Main Content */}
-        <div className="px-6 space-y-6">
+        <div className="px-6 space-y-4">
           {/* Step Counter Circle */}
           <MobileStepCounter steps={steps} dailyGoal={dailyGoal} />
 
@@ -69,12 +78,27 @@ const Index = () => {
             earnedToday={earnedToday}
           />
 
+          {/* Gamification Row */}
+          <div className="grid grid-cols-2 gap-3">
+            <StreakWidget streak={gamification.currentStreak} />
+            <CreditsDisplay credits={gamification.totalCredits} />
+          </div>
+
+          {/* Daily Quest & Weekly Challenge */}
+          <DailyQuestCard quest={gamification.dailyQuest} />
+          <WeeklyChallengeCard challenge={gamification.weeklyChallenge} />
+
           {/* Stats Grid */}
           <MobileStats 
             weeklyAverage={weeklyAverage}
-            streak={streak}
+            streak={gamification.currentStreak}
             totalEarned={totalEarned}
           />
+
+          {/* Achievements Button */}
+          <div className="flex justify-center">
+            <AchievementsSheet achievements={gamification.achievements} />
+          </div>
 
           {/* Conversion Rate */}
           <MobileConversionRate 
@@ -89,6 +113,11 @@ const Index = () => {
         onOpenChange={setDialogOpen}
         currentRate={stepsPerMinute}
         onSave={handleRateChange}
+      />
+
+      <SurpriseBonusDialog
+        open={gamification.showSurpriseBonus}
+        onOpenChange={gamification.setShowSurpriseBonus}
       />
     </div>
   );
