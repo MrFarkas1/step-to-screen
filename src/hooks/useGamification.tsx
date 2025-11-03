@@ -175,55 +175,68 @@ export const useGamification = (steps: number, dailyGoal: number) => {
     }));
   }, [steps]);
 
-  // Check achievements
+  // Check achievements (only when relevant stats change)
   useEffect(() => {
-    setData((prev) => {
-      const updated = { ...prev };
-      let creditsEarned = 0;
+    const checkAchievements = () => {
+      setData((prev) => {
+        let hasChanges = false;
+        let creditsEarned = 0;
 
-      updated.achievements = updated.achievements.map((achievement) => {
-        if (!achievement.unlocked && achievement.condition(updated)) {
-          creditsEarned += achievement.reward;
-          toast.success(`🎉 Achievement Unlocked: ${achievement.title}! +${achievement.reward} credits`);
-          return {
-            ...achievement,
-            unlocked: true,
-            unlockedAt: new Date().toISOString(),
-          };
+        const updatedAchievements = prev.achievements.map((achievement) => {
+          if (!achievement.unlocked && achievement.condition(prev)) {
+            hasChanges = true;
+            creditsEarned += achievement.reward;
+            toast.success(`🎉 Achievement Unlocked: ${achievement.title}! +${achievement.reward} credits`);
+            return {
+              ...achievement,
+              unlocked: true,
+              unlockedAt: new Date().toISOString(),
+            };
+          }
+          return achievement;
+        });
+
+        if (!hasChanges) {
+          return prev;
         }
-        return achievement;
+
+        return {
+          ...prev,
+          achievements: updatedAchievements,
+          totalCredits: prev.totalCredits + creditsEarned,
+        };
       });
+    };
 
-      if (creditsEarned > 0) {
-        updated.totalCredits += creditsEarned;
-      }
+    checkAchievements();
+  }, [steps, dailyGoal]);
 
-      return updated;
-    });
-  }, [data.currentStreak, data.totalStepsAllTime, data.weeklySteps]);
-
-  // Random surprise bonus (5% chance per day)
+  // Random surprise bonus (5% chance per day) - check only once per mount
   useEffect(() => {
     const today = new Date().toISOString().split("T")[0];
     
-    if (data.lastBonusCheck !== today) {
+    setData((prev) => {
+      if (prev.lastBonusCheck === today) {
+        return prev; // Already checked today
+      }
+
       const chance = Math.random();
       if (chance < 0.05) {
-        setData((prev) => ({
+        setShowSurpriseBonus(true);
+        toast.success("🎁 Surprise Bonus! +10 credits");
+        return {
           ...prev,
           totalCredits: prev.totalCredits + 10,
           lastBonusCheck: today,
-        }));
-        setShowSurpriseBonus(true);
-        toast.success("🎁 Surprise Bonus! +10 credits");
-      } else {
-        setData((prev) => ({
-          ...prev,
-          lastBonusCheck: today,
-        }));
+        };
       }
-    }
-  }, [data.lastBonusCheck]);
+      
+      return {
+        ...prev,
+        lastBonusCheck: today,
+      };
+    });
+  }, []); // Only run on mount
 
   return {
     ...data,
