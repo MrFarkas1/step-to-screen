@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 
 interface MinigameState {
   stepCatcherPlayed: boolean;
-  stepRacePlayed: boolean;
   lastPlayDate: string;
 }
 
@@ -19,7 +18,6 @@ const getInitialState = (): MinigameState => {
       if (state.lastPlayDate !== today) {
         return {
           stepCatcherPlayed: false,
-          stepRacePlayed: false,
           lastPlayDate: today,
         };
       }
@@ -31,7 +29,6 @@ const getInitialState = (): MinigameState => {
   
   return {
     stepCatcherPlayed: false,
-    stepRacePlayed: false,
     lastPlayDate: new Date().toDateString(),
   };
 };
@@ -47,14 +44,8 @@ export const useMinigames = () => {
     setState(prev => ({ ...prev, stepCatcherPlayed: true }));
   };
 
-  const markStepRacePlayed = () => {
-    setState(prev => ({ ...prev, stepRacePlayed: true }));
-  };
-
   return {
     canPlayStepCatcher: !state.stepCatcherPlayed,
-    canPlayStepRace: !state.stepRacePlayed,
     markStepCatcherPlayed,
-    markStepRacePlayed,
   };
 };

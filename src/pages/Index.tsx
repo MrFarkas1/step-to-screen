@@ -50,17 +50,13 @@ const Index = () => {
     toast.success(`Conversion rate updated to ${newRate} steps per minute`);
   };
 
-  const handleMinigameComplete = (credits: number, gameType: "catcher" | "race") => {
+  const handleMinigameComplete = (credits: number) => {
     // Credits are awarded through local state update
     const currentCredits = parseInt(localStorage.getItem("strollscroll-credits") || "0");
     const newCredits = currentCredits + credits;
     localStorage.setItem("strollscroll-credits", newCredits.toString());
     
-    if (gameType === "catcher") {
-      minigames.markStepCatcherPlayed();
-    } else {
-      minigames.markStepRacePlayed();
-    }
+    minigames.markStepCatcherPlayed();
     
     // Force a re-render by updating a dummy state
     setTimeout(() => window.location.reload(), 1500);
@@ -151,9 +147,7 @@ const Index = () => {
         open={minigameOpen}
         onOpenChange={setMinigameOpen}
         canPlayStepCatcher={minigames.canPlayStepCatcher}
-        canPlayStepRace={minigames.canPlayStepRace}
-        onStepCatcherComplete={(credits) => handleMinigameComplete(credits, "catcher")}
-        onStepRaceComplete={(credits) => handleMinigameComplete(credits, "race")}
+        onStepCatcherComplete={handleMinigameComplete}
       />
     </div>
   );

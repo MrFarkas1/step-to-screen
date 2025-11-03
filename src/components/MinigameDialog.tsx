@@ -3,51 +3,39 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Footprints, Trophy, Clock, Sparkles } from "lucide-react";
+import { Footprints, Clock, Sparkles } from "lucide-react";
 import { StepCatcherGame } from "./StepCatcherGame";
-import { StepRaceGame } from "./StepRaceGame";
 import { toast } from "sonner";
 
 interface MinigameDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   canPlayStepCatcher: boolean;
-  canPlayStepRace: boolean;
   onStepCatcherComplete: (credits: number) => void;
-  onStepRaceComplete: (credits: number) => void;
 }
 
 export const MinigameDialog = ({
   open,
   onOpenChange,
   canPlayStepCatcher,
-  canPlayStepRace,
   onStepCatcherComplete,
-  onStepRaceComplete,
 }: MinigameDialogProps) => {
-  const [activeGame, setActiveGame] = useState<"catcher" | "race" | null>(null);
+  const [activeGame, setActiveGame] = useState<"catcher" | null>(null);
   const [showResults, setShowResults] = useState(false);
   const [gameScore, setGameScore] = useState(0);
   const [earnedCredits, setEarnedCredits] = useState(0);
   const [gameTier, setGameTier] = useState("");
   const [showConfetti, setShowConfetti] = useState(false);
 
-  const calculateCredits = (score: number, gameType: "catcher" | "race") => {
-    if (gameType === "catcher") {
-      if (score >= 30) return { credits: 15, tier: "Perfect!" };
-      if (score >= 20) return { credits: 10, tier: "Great!" };
-      if (score >= 10) return { credits: 5, tier: "Good!" };
-      return { credits: 2, tier: "Nice Try!" };
-    } else {
-      if (score >= 1500) return { credits: 20, tier: "Champion!" };
-      if (score >= 800) return { credits: 10, tier: "Skilled!" };
-      if (score >= 300) return { credits: 5, tier: "Decent!" };
-      return { credits: 2, tier: "Keep Trying!" };
-    }
+  const calculateCredits = (score: number) => {
+    if (score >= 30) return { credits: 15, tier: "Perfect!" };
+    if (score >= 20) return { credits: 10, tier: "Great!" };
+    if (score >= 10) return { credits: 5, tier: "Good!" };
+    return { credits: 2, tier: "Nice Try!" };
   };
 
-  const handleGameComplete = (score: number, gameType: "catcher" | "race") => {
-    const result = calculateCredits(score, gameType);
+  const handleGameComplete = (score: number) => {
+    const result = calculateCredits(score);
     setGameScore(score);
     setEarnedCredits(result.credits);
     setGameTier(result.tier);
@@ -60,11 +48,7 @@ export const MinigameDialog = ({
       setTimeout(() => setShowConfetti(false), 3000);
     }
     
-    if (gameType === "catcher") {
-      onStepCatcherComplete(result.credits);
-    } else {
-      onStepRaceComplete(result.credits);
-    }
+    onStepCatcherComplete(result.credits);
   };
 
   const handleClose = () => {
@@ -76,16 +60,7 @@ export const MinigameDialog = ({
   if (activeGame === "catcher") {
     return (
       <StepCatcherGame
-        onComplete={(score) => handleGameComplete(score, "catcher")}
-        onClose={handleClose}
-      />
-    );
-  }
-
-  if (activeGame === "race") {
-    return (
-      <StepRaceGame
-        onComplete={(score) => handleGameComplete(score, "race")}
+        onComplete={handleGameComplete}
         onClose={handleClose}
       />
     );
@@ -162,7 +137,7 @@ export const MinigameDialog = ({
             <DialogHeader>
               <div className="flex items-center gap-2 justify-center">
                 <Sparkles className="w-6 h-6 text-primary animate-pulse" />
-                <DialogTitle className="text-2xl">Hidden Games</DialogTitle>
+                <DialogTitle className="text-2xl">Hidden Game</DialogTitle>
                 <Sparkles className="w-6 h-6 text-primary animate-pulse" />
               </div>
               <p className="text-sm text-muted-foreground pt-2">
@@ -170,7 +145,7 @@ export const MinigameDialog = ({
               </p>
             </DialogHeader>
             
-            <div className="grid gap-4 mt-4">
+            <div className="mt-4">
               <Card
                 className={`p-6 transition-all relative overflow-hidden ${
                   canPlayStepCatcher
@@ -215,53 +190,6 @@ export const MinigameDialog = ({
                     )}
                   </div>
                   <Footprints className={`w-8 h-8 ${canPlayStepCatcher ? 'text-primary' : 'text-muted-foreground'}`} />
-                </div>
-              </Card>
-
-              <Card
-                className={`p-6 transition-all relative overflow-hidden ${
-                  canPlayStepRace
-                    ? "cursor-pointer hover:shadow-glow hover:scale-[1.02] active:scale-[0.98] bg-gradient-to-br from-card to-primary/5"
-                    : "opacity-60 cursor-not-allowed bg-muted"
-                }`}
-                onClick={() => {
-                  if (canPlayStepRace) {
-                    setActiveGame("race");
-                  } else {
-                    toast.info("Come back tomorrow to play again!");
-                  }
-                }}
-              >
-                {canPlayStepRace && (
-                  <div className="absolute top-2 right-2">
-                    <Badge variant="default" className="text-xs animate-pulse">
-                      Available!
-                    </Badge>
-                  </div>
-                )}
-                
-                <div className="flex items-center gap-4">
-                  <div className="text-5xl">{canPlayStepRace ? '🏁' : '🔒'}</div>
-                  <div className="flex-1">
-                    <h3 className="font-bold text-lg flex items-center gap-2">
-                      Step Race
-                      {canPlayStepRace && <span className="text-xs">⚡</span>}
-                    </h3>
-                    <p className="text-sm text-muted-foreground mb-2">
-                      Jump over obstacles and survive as long as you can!
-                    </p>
-                    {!canPlayStepRace ? (
-                      <div className="flex items-center gap-2 text-xs text-primary">
-                        <Clock className="w-3 h-3" />
-                        <span>Played today — Resets at midnight</span>
-                      </div>
-                    ) : (
-                      <div className="text-xs text-muted-foreground">
-                        Earn up to 20 credits! 🎁
-                      </div>
-                    )}
-                  </div>
-                  <Trophy className={`w-8 h-8 ${canPlayStepRace ? 'text-primary' : 'text-muted-foreground'}`} />
                 </div>
               </Card>
             </div>
