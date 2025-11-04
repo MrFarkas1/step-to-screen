@@ -1,4 +1,4 @@
-import { Settings, Moon, Sun, Zap, Target } from "lucide-react";
+import { Settings, Moon, Sun, Zap, Target, RefreshCw } from "lucide-react";
 import { useTheme } from "next-themes";
 import {
   Sheet,
@@ -19,6 +19,7 @@ interface SettingsSheetProps {
   onRateChange: (value: number) => void;
   dailyGoal: number;
   onGoalChange: (value: number) => void;
+  onResetOnboarding: () => void;
 }
 
 export function SettingsSheet({
@@ -26,6 +27,7 @@ export function SettingsSheet({
   onRateChange,
   dailyGoal,
   onGoalChange,
+  onResetOnboarding,
 }: SettingsSheetProps) {
   const { theme, setTheme } = useTheme();
 
@@ -140,6 +142,33 @@ export function SettingsSheet({
                 className="w-full"
               />
             </div>
+          </div>
+
+          <Separator />
+
+          {/* Recalculate Screen Life */}
+          <div className="space-y-4">
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-lg bg-primary/10">
+                <RefreshCw className="h-5 w-5 text-primary" />
+              </div>
+              <div className="flex-1">
+                <Label className="text-base font-semibold">
+                  Screen Life Calculator
+                </Label>
+                <p className="text-sm text-muted-foreground">
+                  Recalculate your lifetime screen time
+                </p>
+              </div>
+            </div>
+            <Button
+              variant="outline"
+              className="w-full"
+              onClick={onResetOnboarding}
+            >
+              <RefreshCw className="mr-2 h-4 w-4" />
+              Recalculate My Screen Life
+            </Button>
           </div>
         </div>
       </SheetContent>

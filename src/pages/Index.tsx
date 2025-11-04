@@ -12,8 +12,10 @@ import { AchievementsSheet } from "@/components/AchievementsSheet";
 import { SurpriseBonusDialog } from "@/components/SurpriseBonusDialog";
 import { CreditsDisplay } from "@/components/CreditsDisplay";
 import { MinigameDialog } from "@/components/MinigameDialog";
+import { Onboarding } from "@/components/Onboarding";
 import { useGamification } from "@/hooks/useGamification";
 import { useMinigames } from "@/hooks/useMinigames";
+import { useOnboarding } from "@/hooks/useOnboarding";
 import { toast } from "sonner";
 
 const Index = () => {
@@ -25,6 +27,8 @@ const Index = () => {
   
   const gamification = useGamification(steps, dailyGoal);
   const minigames = useMinigames();
+  const { hasCompletedOnboarding, resetOnboarding } = useOnboarding();
+  const [showOnboarding, setShowOnboarding] = useState(!hasCompletedOnboarding);
   
   const screenTimeMinutes = Math.floor(steps / stepsPerMinute);
   const earnedToday = screenTimeMinutes;
@@ -62,6 +66,11 @@ const Index = () => {
     setTimeout(() => window.location.reload(), 1500);
   };
 
+  // Show onboarding if not completed
+  if (showOnboarding) {
+    return <Onboarding onComplete={() => setShowOnboarding(false)} />;
+  }
+
   return (
     <div className="min-h-screen bg-background pb-safe">
       <div className="max-w-md mx-auto">
@@ -87,6 +96,10 @@ const Index = () => {
             onRateChange={handleRateChange}
             dailyGoal={dailyGoal}
             onGoalChange={(value) => setDailyGoal(value)}
+            onResetOnboarding={() => {
+              resetOnboarding();
+              setShowOnboarding(true);
+            }}
           />
         </div>
 
