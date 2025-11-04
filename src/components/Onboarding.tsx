@@ -21,10 +21,23 @@ export function Onboarding({ onComplete }: OnboardingProps) {
   const [isAnimating, setIsAnimating] = useState(false);
 
   const handleNext = () => {
-    if (step === 1 && (age < 10 || age > 100)) {
-      toast.error("Please enter a valid age between 10 and 100");
+    if (step === 1) {
+      if (!age || age < 1 || age > 120) {
+        toast.error("Please enter a realistic age between 1 and 120");
+        return;
+      }
+      if (age >= 85) {
+        toast("At age 85+, you've reached the lifespan baseline. We'll show you the impact anyway!", {
+          duration: 4000,
+        });
+      }
+    }
+    
+    if (step === 2 && (dailyHours < 0 || dailyHours > 24)) {
+      toast.error("Please enter hours between 0 and 24");
       return;
     }
+    
     if (step < 2) {
       setStep(step + 1);
     } else {
@@ -58,7 +71,9 @@ export function Onboarding({ onComplete }: OnboardingProps) {
 
   const handleShare = () => {
     const result = calculateLifeOnScreen();
-    const text = `I'll spend ${result.years} years of my life on my phone! 📱 Time to walk more with StrollScroll.`;
+    const text = result.atLifespan 
+      ? `At age ${age}, I've reached the 85-year lifespan baseline. Time to make every moment count with StrollScroll! 📱`
+      : `If I keep using my phone ${dailyHours} hours daily, I'll waste ${result.years} years of my remaining life on screens! 📱 Time to walk more with StrollScroll.`;
     
     if (navigator.share) {
       navigator.share({ text }).catch(() => {});
@@ -70,6 +85,19 @@ export function Onboarding({ onComplete }: OnboardingProps) {
 
   if (showResult) {
     const result = calculateLifeOnScreen();
+    
+    // Handle edge cases
+    if (!result.isValid) {
+      return (
+        <div className="fixed inset-0 z-50 bg-gradient-to-br from-primary/20 via-background to-secondary/20 animate-fade-in flex items-center justify-center p-6">
+          <Card className="p-8 max-w-md">
+            <p className="text-center text-lg">Invalid data. Please try again.</p>
+            <Button onClick={() => setShowResult(false)} className="w-full mt-4">Go Back</Button>
+          </Card>
+        </div>
+      );
+    }
+    
     const funFacts = [
       "That's enough time to walk around Earth twice 🌍",
       "Or learn 3 new languages 🧠",
@@ -104,12 +132,18 @@ export function Onboarding({ onComplete }: OnboardingProps) {
               </div>
               
               <div className="text-2xl md:text-3xl font-semibold text-foreground">
-                years of your life
+                {result.atLifespan ? "years at" : "years"}
               </div>
               
               <div className="flex items-center justify-center gap-2 text-lg md:text-xl text-muted-foreground">
-                <span>on your phone</span>
-                <span className="text-3xl">📱</span>
+                {result.atLifespan ? (
+                  <span>You've reached the 85-year baseline</span>
+                ) : (
+                  <>
+                    <span>you'll waste on screens</span>
+                    <span className="text-3xl">📱</span>
+                  </>
+                )}
               </div>
             </div>
 
@@ -133,12 +167,16 @@ export function Onboarding({ onComplete }: OnboardingProps) {
                   <div className="flex items-center justify-center gap-2">
                     <Sparkles className="h-5 w-5 text-primary animate-pulse" />
                     <p className="text-lg font-semibold text-foreground">
-                      Let's turn those years into memories
+                      {result.atLifespan 
+                        ? "Every moment counts!" 
+                        : "Let's turn those years into memories"}
                     </p>
                     <Sparkles className="h-5 w-5 text-primary animate-pulse" />
                   </div>
                   <p className="text-muted-foreground">
-                    Walk more, earn your screen time!
+                    {result.atLifespan
+                      ? "Start making every screen minute count — walk more, live better!"
+                      : `If you keep using your phone ${dailyHours} hours daily, you will waste about ${result.years} years of your remaining life (assuming an 85-year lifespan).`}
                   </p>
                 </div>
 
@@ -206,11 +244,11 @@ export function Onboarding({ onComplete }: OnboardingProps) {
                     onChange={(e) => setAge(parseInt(e.target.value) || 0)}
                     placeholder="Enter your age"
                     className="text-center text-2xl h-16 text-foreground"
-                    min={10}
-                    max={100}
+                    min={1}
+                    max={120}
                   />
                   <p className="text-sm text-center text-muted-foreground">
-                    Ages 10-100
+                    Ages 1-120
                   </p>
                 </div>
               </div>
@@ -240,15 +278,15 @@ export function Onboarding({ onComplete }: OnboardingProps) {
                   <Slider
                     value={[dailyHours]}
                     onValueChange={([value]) => setDailyHours(value)}
-                    min={1}
-                    max={16}
+                    min={0}
+                    max={24}
                     step={0.5}
                     className="w-full"
                   />
 
                   <div className="flex justify-between text-sm text-muted-foreground">
-                    <span>1h</span>
-                    <span>16h</span>
+                    <span>0h</span>
+                    <span>24h</span>
                   </div>
                 </div>
               </div>

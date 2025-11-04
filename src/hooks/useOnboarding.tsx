@@ -39,13 +39,27 @@ export function useOnboarding() {
   };
 
   const calculateLifeOnScreen = () => {
-    const lifeExpectancy = 85;
-    const remainingYears = Math.max(0, lifeExpectancy - data.age);
+    const LIFESPAN = 85;
+    
+    // Validate inputs
+    if (!data.age || !data.dailyHours) {
+      return { years: 0, totalHours: 0, isValid: false };
+    }
+    
+    // Edge case: already at or past lifespan
+    if (data.age >= LIFESPAN) {
+      return { years: 0, totalHours: 0, isValid: true, atLifespan: true };
+    }
+    
+    const remainingYears = LIFESPAN - data.age;
     const totalHours = remainingYears * 365 * data.dailyHours;
     const yearsOnScreen = totalHours / 24 / 365;
+    
     return {
       years: parseFloat(yearsOnScreen.toFixed(1)),
       totalHours: Math.round(totalHours),
+      isValid: true,
+      atLifespan: false
     };
   };
 
