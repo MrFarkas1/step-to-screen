@@ -6,6 +6,7 @@ import { Card } from "@/components/ui/card";
 import { ArrowRight, Sparkles, Share2 } from "lucide-react";
 import { useOnboarding } from "@/hooks/useOnboarding";
 import { toast } from "sonner";
+import { AgePicker } from "@/components/AgePicker";
 
 interface OnboardingProps {
   onComplete: () => void;
@@ -237,19 +238,13 @@ export function Onboarding({ onComplete }: OnboardingProps) {
                   </p>
                 </div>
 
-                <div className="space-y-4">
-                  <Input
-                    type="number"
+                <div className="pt-4">
+                  <AgePicker
                     value={age}
-                    onChange={(e) => setAge(parseInt(e.target.value) || 0)}
-                    placeholder="Enter your age"
-                    className="text-center text-2xl h-16 text-foreground"
+                    onChange={setAge}
                     min={1}
-                    max={120}
+                    max={85}
                   />
-                  <p className="text-sm text-center text-muted-foreground">
-                    Ages 1-120
-                  </p>
                 </div>
               </div>
             )}
