@@ -39,7 +39,7 @@ export function useOnboarding() {
   };
 
   const calculateLifeOnScreen = () => {
-    const lifeExpectancy = 80;
+    const lifeExpectancy = 85;
     const remainingYears = Math.max(0, lifeExpectancy - data.age);
     const totalHours = remainingYears * 365 * data.dailyHours;
     const yearsOnScreen = totalHours / 24 / 365;
