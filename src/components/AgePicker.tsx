@@ -89,12 +89,19 @@ export function AgePicker({ value, onChange, min = 1, max = 85 }: AgePickerProps
   return (
     <div className="relative w-full max-w-xs mx-auto">
       {/* Top fade overlay with stronger gradient */}
-      <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-card via-card/95 to-transparent z-10 pointer-events-none rounded-t-lg shadow-[0_4px_12px_rgba(0,0,0,0.1)]" />
+      <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-card via-card/95 to-transparent z-10 pointer-events-none rounded-t-lg" />
       
-      {/* Selection indicator with glow effect */}
-      <div className="absolute top-1/2 left-0 right-0 h-[60px] -translate-y-1/2 z-10 pointer-events-none">
+      {/* Selection indicator with glow effect - perfectly centered */}
+      <div 
+        className="absolute left-0 right-0 z-10 pointer-events-none"
+        style={{
+          top: '50%',
+          transform: 'translateY(-50%) translateZ(0)',
+          height: `${ITEM_HEIGHT}px`,
+        }}
+      >
         <div className="absolute inset-0 border-y-2 border-primary/40 bg-primary/10 backdrop-blur-sm" />
-        <div className="absolute inset-0 shadow-[0_0_20px_rgba(var(--primary-rgb),0.2)]" />
+        <div className="absolute inset-0 shadow-[0_0_20px_hsl(var(--primary)/0.15)]" style={{ transform: 'translateZ(0)' }} />
       </div>
       
       {/* Scrollable container */}
@@ -112,6 +119,7 @@ export function AgePicker({ value, onChange, min = 1, max = 85 }: AgePickerProps
           paddingTop: `${ITEM_HEIGHT}px`,
           paddingBottom: `${ITEM_HEIGHT}px`,
           scrollBehavior: isScrolling ? "auto" : "smooth",
+          scrollSnapType: 'y mandatory',
         }}
       >
         {ages.map((age) => {
@@ -128,32 +136,42 @@ export function AgePicker({ value, onChange, min = 1, max = 85 }: AgePickerProps
             <div
               key={age}
               className={cn(
-                "snap-center flex items-center justify-center cursor-pointer select-none",
+                "flex items-center justify-center cursor-pointer select-none",
                 "transition-all ease-out",
                 isSelected && !isScrolling ? "duration-300" : "duration-200"
               )}
               style={{ 
                 height: `${ITEM_HEIGHT}px`,
+                scrollSnapAlign: 'center',
                 opacity: isSelected && !isScrolling ? 1 : opacity,
-                transform: `scale(${isSelected && !isScrolling ? 1.15 : scale})`,
-                fontSize: isSelected && !isScrolling ? "3.5rem" : "2rem",
-                fontWeight: isSelected && !isScrolling ? "700" : "500",
-                color: isSelected && !isScrolling ? "hsl(var(--primary))" : "hsl(var(--muted-foreground))",
-                lineHeight: `${ITEM_HEIGHT}px`,
+                transform: `scale(${isSelected && !isScrolling ? 1.15 : scale}) translateZ(0)`,
               }}
               onClick={() => {
                 onChange(age);
                 scrollToAge(age, true);
               }}
             >
-              {age}
+              <span
+                style={{
+                  fontSize: isSelected && !isScrolling ? "3.5rem" : "2rem",
+                  fontWeight: isSelected && !isScrolling ? "700" : "500",
+                  color: isSelected && !isScrolling ? "hsl(var(--primary))" : "hsl(var(--muted-foreground))",
+                  lineHeight: 1,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  textShadow: isSelected && !isScrolling ? '0 0 12px hsl(var(--primary)/0.3)' : 'none',
+                }}
+              >
+                {age}
+              </span>
             </div>
           );
         })}
       </div>
       
       {/* Bottom fade overlay with stronger gradient */}
-      <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-card via-card/95 to-transparent z-10 pointer-events-none rounded-b-lg shadow-[0_-4px_12px_rgba(0,0,0,0.1)]" />
+      <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-card via-card/95 to-transparent z-10 pointer-events-none rounded-b-lg" />
       
       {/* Instructions */}
       <p className="text-center text-sm text-muted-foreground mt-4">
