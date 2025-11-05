@@ -88,21 +88,8 @@ export function AgePicker({ value, onChange, min = 1, max = 85 }: AgePickerProps
 
   return (
     <div className="relative w-full max-w-xs mx-auto">
-      {/* Top fade overlay with stronger gradient */}
-      <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-card via-card/95 to-transparent z-10 pointer-events-none rounded-t-lg" />
-      
-      {/* Selection indicator with glow effect - perfectly centered */}
-      <div 
-        className="absolute left-0 right-0 z-10 pointer-events-none"
-        style={{
-          top: '50%',
-          transform: 'translateY(-50%) translateZ(0)',
-          height: `${ITEM_HEIGHT}px`,
-        }}
-      >
-        <div className="absolute inset-0 border-y-2 border-primary/40 bg-primary/10 backdrop-blur-sm" />
-        <div className="absolute inset-0 shadow-[0_0_20px_hsl(var(--primary)/0.15)]" style={{ transform: 'translateZ(0)' }} />
-      </div>
+      {/* Top fade overlay for depth */}
+      <div className="absolute top-0 left-0 right-0 h-28 bg-gradient-to-b from-background via-background/98 to-transparent z-10 pointer-events-none rounded-t-lg" />
       
       {/* Scrollable container */}
       <div
@@ -155,12 +142,13 @@ export function AgePicker({ value, onChange, min = 1, max = 85 }: AgePickerProps
                 style={{
                   fontSize: isSelected && !isScrolling ? "3.5rem" : "2rem",
                   fontWeight: isSelected && !isScrolling ? "700" : "500",
-                  color: isSelected && !isScrolling ? "hsl(var(--primary))" : "hsl(var(--muted-foreground))",
+                  color: isSelected && !isScrolling ? "#00ffff" : "hsl(var(--muted-foreground))",
                   lineHeight: 1,
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  textShadow: isSelected && !isScrolling ? '0 0 12px hsl(var(--primary)/0.3)' : 'none',
+                  fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+                  transition: 'all 0.3s ease-out',
                 }}
               >
                 {age}
@@ -170,8 +158,8 @@ export function AgePicker({ value, onChange, min = 1, max = 85 }: AgePickerProps
         })}
       </div>
       
-      {/* Bottom fade overlay with stronger gradient */}
-      <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-card via-card/95 to-transparent z-10 pointer-events-none rounded-b-lg" />
+      {/* Bottom fade overlay for depth */}
+      <div className="absolute bottom-0 left-0 right-0 h-28 bg-gradient-to-t from-background via-background/98 to-transparent z-10 pointer-events-none rounded-b-lg" />
       
       {/* Instructions */}
       <p className="text-center text-sm text-muted-foreground mt-4">
