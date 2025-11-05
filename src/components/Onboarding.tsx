@@ -141,7 +141,7 @@ export function Onboarding({ onComplete }: OnboardingProps) {
                   <span>You've reached the 85-year baseline</span>
                 ) : (
                   <>
-                    <span>you'll waste on screens</span>
+                    <span>you'll waste from now on</span>
                     <span className="text-3xl">📱</span>
                   </>
                 )}
