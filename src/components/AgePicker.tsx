@@ -19,10 +19,32 @@ export function AgePicker({ value, onChange, min = 1, max = 85 }: AgePickerProps
     if (!containerRef.current) return;
     const index = ages.indexOf(age);
     const scrollTop = index * ITEM_HEIGHT;
-    containerRef.current.scrollTo({
-      top: scrollTop,
-      behavior: smooth ? "smooth" : "auto",
-    });
+    
+    if (smooth) {
+      // Smooth spring-like animation
+      const start = containerRef.current.scrollTop;
+      const distance = scrollTop - start;
+      const duration = 400;
+      const startTime = performance.now();
+      
+      const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
+      
+      const animateScroll = (currentTime: number) => {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const eased = easeOutCubic(progress);
+        
+        containerRef.current!.scrollTop = start + distance * eased;
+        
+        if (progress < 1) {
+          requestAnimationFrame(animateScroll);
+        }
+      };
+      
+      requestAnimationFrame(animateScroll);
+    } else {
+      containerRef.current.scrollTop = scrollTop;
+    }
   };
 
   const handleScroll = () => {
@@ -66,11 +88,14 @@ export function AgePicker({ value, onChange, min = 1, max = 85 }: AgePickerProps
 
   return (
     <div className="relative w-full max-w-xs mx-auto">
-      {/* Top fade overlay */}
-      <div className="absolute top-0 left-0 right-0 h-20 bg-gradient-to-b from-card via-card/80 to-transparent z-10 pointer-events-none rounded-t-lg" />
+      {/* Top fade overlay with stronger gradient */}
+      <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-card via-card/95 to-transparent z-10 pointer-events-none rounded-t-lg shadow-[0_4px_12px_rgba(0,0,0,0.1)]" />
       
-      {/* Selection indicator */}
-      <div className="absolute top-1/2 left-0 right-0 h-[60px] -translate-y-1/2 border-y-2 border-primary/30 bg-primary/5 z-10 pointer-events-none" />
+      {/* Selection indicator with glow effect */}
+      <div className="absolute top-1/2 left-0 right-0 h-[60px] -translate-y-1/2 z-10 pointer-events-none">
+        <div className="absolute inset-0 border-y-2 border-primary/40 bg-primary/10 backdrop-blur-sm" />
+        <div className="absolute inset-0 shadow-[0_0_20px_rgba(var(--primary-rgb),0.2)]" />
+      </div>
       
       {/* Scrollable container */}
       <div
@@ -79,27 +104,43 @@ export function AgePicker({ value, onChange, min = 1, max = 85 }: AgePickerProps
         onKeyDown={handleKeyDown}
         tabIndex={0}
         className={cn(
-          "h-[180px] overflow-y-auto overflow-x-hidden snap-y snap-mandatory scroll-smooth",
+          "h-[180px] overflow-y-auto overflow-x-hidden snap-y snap-mandatory",
           "focus:outline-none focus:ring-2 focus:ring-primary/50 rounded-lg",
           "scrollbar-hide relative"
         )}
         style={{
           paddingTop: `${ITEM_HEIGHT}px`,
           paddingBottom: `${ITEM_HEIGHT}px`,
+          scrollBehavior: isScrolling ? "auto" : "smooth",
         }}
       >
         {ages.map((age) => {
           const isSelected = age === value;
+          const containerScrollTop = containerRef.current?.scrollTop || 0;
+          const index = ages.indexOf(age);
+          const targetScrollTop = index * ITEM_HEIGHT;
+          const distance = Math.abs(containerScrollTop - targetScrollTop);
+          const maxDistance = ITEM_HEIGHT * 2;
+          const opacity = Math.max(0.3, 1 - (distance / maxDistance) * 0.7);
+          const scale = isSelected ? 1 : Math.max(0.75, 1 - (distance / maxDistance) * 0.25);
+          
           return (
             <div
               key={age}
               className={cn(
-                "snap-center flex items-center justify-center transition-all duration-200 cursor-pointer",
-                isSelected && !isScrolling
-                  ? "text-5xl font-bold text-primary scale-110"
-                  : "text-3xl font-medium text-muted-foreground scale-90 opacity-50"
+                "snap-center flex items-center justify-center cursor-pointer select-none",
+                "transition-all ease-out",
+                isSelected && !isScrolling ? "duration-300" : "duration-200"
               )}
-              style={{ height: `${ITEM_HEIGHT}px` }}
+              style={{ 
+                height: `${ITEM_HEIGHT}px`,
+                opacity: isSelected && !isScrolling ? 1 : opacity,
+                transform: `scale(${isSelected && !isScrolling ? 1.15 : scale})`,
+                fontSize: isSelected && !isScrolling ? "3.5rem" : "2rem",
+                fontWeight: isSelected && !isScrolling ? "700" : "500",
+                color: isSelected && !isScrolling ? "hsl(var(--primary))" : "hsl(var(--muted-foreground))",
+                lineHeight: `${ITEM_HEIGHT}px`,
+              }}
               onClick={() => {
                 onChange(age);
                 scrollToAge(age, true);
@@ -111,8 +152,8 @@ export function AgePicker({ value, onChange, min = 1, max = 85 }: AgePickerProps
         })}
       </div>
       
-      {/* Bottom fade overlay */}
-      <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-card via-card/80 to-transparent z-10 pointer-events-none rounded-b-lg" />
+      {/* Bottom fade overlay with stronger gradient */}
+      <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-card via-card/95 to-transparent z-10 pointer-events-none rounded-b-lg shadow-[0_-4px_12px_rgba(0,0,0,0.1)]" />
       
       {/* Instructions */}
       <p className="text-center text-sm text-muted-foreground mt-4">
