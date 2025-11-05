@@ -13,13 +13,35 @@ interface OnboardingProps {
 }
 
 export function Onboarding({ onComplete }: OnboardingProps) {
-  const { completeOnboarding, calculateLifeOnScreen, data } = useOnboarding();
+  const { completeOnboarding, data } = useOnboarding();
   const [step, setStep] = useState(1);
   const [age, setAge] = useState(data.age || 25);
   const [dailyHours, setDailyHours] = useState(data.dailyHours || 5);
   const [showResult, setShowResult] = useState(false);
   const [animatedYears, setAnimatedYears] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
+
+  // Calculate wasted years using current local state
+  const calculateWastedYears = (currentAge: number, currentDailyHours: number) => {
+    const LIFESPAN = 85;
+    
+    if (!currentAge || !currentDailyHours) {
+      return { years: 0, isValid: false, atLifespan: false };
+    }
+    
+    if (currentAge >= LIFESPAN) {
+      return { years: 0, isValid: true, atLifespan: true };
+    }
+    
+    const remainingYears = LIFESPAN - currentAge;
+    const wastedYears = remainingYears * (currentDailyHours / 24);
+    
+    return {
+      years: parseFloat(wastedYears.toFixed(1)),
+      isValid: true,
+      atLifespan: false
+    };
+  };
 
   const handleNext = () => {
     if (step === 1) {
@@ -51,7 +73,7 @@ export function Onboarding({ onComplete }: OnboardingProps) {
 
   const startAnimation = () => {
     setIsAnimating(true);
-    const result = calculateLifeOnScreen();
+    const result = calculateWastedYears(age, dailyHours);
     const targetYears = result.years;
     const duration = 3000; // 3 seconds
     const steps = 60;
@@ -71,7 +93,7 @@ export function Onboarding({ onComplete }: OnboardingProps) {
   };
 
   const handleShare = () => {
-    const result = calculateLifeOnScreen();
+    const result = calculateWastedYears(age, dailyHours);
     const text = result.atLifespan 
       ? `At age ${age}, I've reached the 85-year lifespan baseline. Time to make every moment count with StrollScroll! 📱`
       : `If I keep using my phone ${dailyHours} hours daily, I'll waste ${result.years} years of my remaining life on screens! 📱 Time to walk more with StrollScroll.`;
@@ -85,7 +107,7 @@ export function Onboarding({ onComplete }: OnboardingProps) {
   };
 
   if (showResult) {
-    const result = calculateLifeOnScreen();
+    const result = calculateWastedYears(age, dailyHours);
     
     // Handle edge cases
     if (!result.isValid) {
