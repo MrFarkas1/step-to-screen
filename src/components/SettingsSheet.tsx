@@ -1,5 +1,6 @@
-import { Settings, Moon, Sun, Zap, Target, RefreshCw } from "lucide-react";
+import { Settings, Moon, Sun, Zap, Target, RefreshCw, Trash2 } from "lucide-react";
 import { useTheme } from "next-themes";
+import { useState } from "react";
 import {
   Sheet,
   SheetContent,
@@ -8,11 +9,22 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
+import { toast } from "@/hooks/use-toast";
 
 interface SettingsSheetProps {
   stepsPerMinute: number;
@@ -30,6 +42,24 @@ export function SettingsSheet({
   onResetOnboarding,
 }: SettingsSheetProps) {
   const { theme, setTheme } = useTheme();
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+
+  const handleDeleteAllData = () => {
+    // Clear all localStorage data
+    localStorage.clear();
+    
+    // Show success toast
+    toast({
+      title: "✅ App restarted successfully",
+      description: "All data has been deleted",
+      duration: 2500,
+    });
+    
+    // Small delay to show toast, then reload
+    setTimeout(() => {
+      window.location.reload();
+    }, 2500);
+  };
 
   return (
     <Sheet>
@@ -170,8 +200,61 @@ export function SettingsSheet({
               Recalculate My Screen Life
             </Button>
           </div>
+
+          <Separator />
+
+          {/* Delete All Data */}
+          <div className="space-y-4 pb-4">
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-lg bg-destructive/10">
+                <Trash2 className="h-5 w-5 text-destructive" />
+              </div>
+              <div className="flex-1">
+                <Label className="text-base font-semibold text-destructive">
+                  Danger Zone
+                </Label>
+                <p className="text-sm text-muted-foreground">
+                  Delete all data and restart the app
+                </p>
+              </div>
+            </div>
+            <Button
+              variant="destructive"
+              className="w-full font-bold shadow-lg"
+              onClick={() => setShowDeleteDialog(true)}
+            >
+              <Trash2 className="mr-2 h-4 w-4" />
+              Delete All Data & Restart App
+            </Button>
+          </div>
         </div>
       </SheetContent>
+
+      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+        <AlertDialogContent className="animate-scale-in">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center gap-2 text-destructive">
+              <Trash2 className="h-5 w-5" />
+              ⚠️ Are you sure?
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-base">
+              Are you sure you want to delete all your data and restart the app? 
+              This action cannot be undone. All your progress, settings, and preferences will be permanently deleted.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="font-medium">
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDeleteAllData}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90 font-bold"
+            >
+              Yes, Delete Everything
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Sheet>
   );
 }
