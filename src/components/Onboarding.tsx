@@ -5,6 +5,7 @@ import { Slider } from "@/components/ui/slider";
 import { Card } from "@/components/ui/card";
 import { ArrowRight, Sparkles, Share2 } from "lucide-react";
 import { useOnboarding } from "@/hooks/useOnboarding";
+import { useAppRestrictions } from "@/hooks/useAppRestrictions";
 import { toast } from "sonner";
 import { AgePicker } from "@/components/AgePicker";
 import { AppRestrictionsOnboarding } from "@/components/AppRestrictionsOnboarding";
@@ -15,6 +16,7 @@ interface OnboardingProps {
 
 export function Onboarding({ onComplete }: OnboardingProps) {
   const { completeOnboarding, data } = useOnboarding();
+  const { enabled: appRestrictionsEnabled } = useAppRestrictions();
   const [step, setStep] = useState(1);
   const [age, setAge] = useState(data.age || 25);
   const [dailyHours, setDailyHours] = useState(data.dailyHours || 5);
@@ -109,7 +111,12 @@ export function Onboarding({ onComplete }: OnboardingProps) {
   };
 
   const handleStartStrolling = () => {
-    setShowAppRestrictions(true);
+    // Skip app restrictions if already configured
+    if (appRestrictionsEnabled) {
+      onComplete();
+    } else {
+      setShowAppRestrictions(true);
+    }
   };
 
   const handleAppRestrictionsComplete = () => {
