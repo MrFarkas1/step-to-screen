@@ -1,17 +1,11 @@
 import { useState } from "react";
-import { Shield, Lock, Trash2 } from "lucide-react";
+import { Shield, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import {
   AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
   AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { AppRestrictionsList } from "./AppRestrictionsList";
 import { PinPrompt } from "./PinPrompt";
@@ -26,13 +20,11 @@ export function AppRestrictionsSettings() {
     toggleApp,
     verifyPin,
     changePin,
-    resetRestrictions,
     getRestrictedApps,
   } = useAppRestrictions();
   
   const [showPinPrompt, setShowPinPrompt] = useState(false);
   const [showChangePinDialog, setShowChangePinDialog] = useState(false);
-  const [showResetDialog, setShowResetDialog] = useState(false);
   const [isUnlocked, setIsUnlocked] = useState(!enabled);
   const [pendingAction, setPendingAction] = useState<"apps" | "changePin" | null>(
     null
@@ -62,16 +54,10 @@ export function AppRestrictionsSettings() {
   };
 
   const handleForgotPin = () => {
-    setShowResetDialog(true);
-  };
-
-  const handleResetRestrictions = () => {
-    resetRestrictions();
-    setIsUnlocked(true);
-    setShowResetDialog(false);
     toast({
-      title: "Restrictions Reset",
-      description: "All app restrictions and PIN have been removed",
+      title: "Forgot PIN?",
+      description: "Use 'Delete All Data' in Settings to reset all restrictions and start over.",
+      duration: 5000,
     });
   };
 
@@ -161,14 +147,6 @@ export function AppRestrictionsSettings() {
           >
             Change PIN
           </Button>
-          <Button
-            variant="destructive"
-            className="w-full"
-            onClick={() => setShowResetDialog(true)}
-          >
-            <Trash2 className="mr-2 h-4 w-4" />
-            Reset All Restrictions
-          </Button>
         </div>
 
         <p className="text-xs text-muted-foreground px-2 pt-2">
@@ -193,30 +171,6 @@ export function AppRestrictionsSettings() {
             onComplete={handlePinChange}
             onSkip={() => setShowChangePinDialog(false)}
           />
-        </AlertDialogContent>
-      </AlertDialog>
-
-      <AlertDialog open={showResetDialog} onOpenChange={setShowResetDialog}>
-        <AlertDialogContent className="animate-scale-in">
-          <AlertDialogHeader>
-            <AlertDialogTitle className="flex items-center gap-2 text-destructive">
-              <Trash2 className="h-5 w-5" />
-              Reset All Restrictions?
-            </AlertDialogTitle>
-            <AlertDialogDescription className="text-base">
-              This will remove all app restrictions and delete your protection PIN.
-              You can set them up again later.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={handleResetRestrictions}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-            >
-              Reset Restrictions
-            </AlertDialogAction>
-          </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
     </>
