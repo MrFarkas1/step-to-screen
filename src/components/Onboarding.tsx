@@ -158,8 +158,8 @@ export function Onboarding({ onComplete }: OnboardingProps) {
     const randomFact = funFacts[Math.floor(Math.random() * funFacts.length)];
 
     return (
-      <div className="fixed inset-0 z-50 bg-gradient-to-br from-primary/20 via-background to-secondary/20 animate-fade-in">
-        <div className="h-full flex flex-col items-center justify-center p-6 relative overflow-hidden">
+      <div className="fixed inset-0 z-50 bg-gradient-to-br from-primary/20 via-background to-secondary/20 animate-fade-in safe-top safe-bottom">
+        <div className="h-full flex flex-col items-center justify-center p-4 sm:p-6 relative overflow-hidden">
           {/* Floating particles */}
           {!isAnimating && (
             <>
@@ -170,11 +170,11 @@ export function Onboarding({ onComplete }: OnboardingProps) {
             </>
           )}
 
-          <div className="max-w-md w-full space-y-8 text-center animate-scale-in">
+          <div className="max-w-md w-full space-y-6 sm:space-y-8 text-center animate-scale-in">
             {/* Main counter */}
-            <div className="space-y-4">
+            <div className="space-y-3 sm:space-y-4">
               <div className="relative">
-                <div className={`text-7xl md:text-8xl font-bold bg-gradient-to-br from-primary to-primary/60 bg-clip-text text-transparent transition-all duration-300 ${isAnimating ? 'scale-110' : 'scale-100'}`}>
+                <div className={`text-6xl sm:text-7xl md:text-8xl font-bold bg-gradient-to-br from-primary to-primary/60 bg-clip-text text-transparent transition-all duration-300 ${isAnimating ? 'scale-110' : 'scale-100'}`}>
                   {animatedYears}
                 </div>
                 {isAnimating && (
@@ -182,11 +182,11 @@ export function Onboarding({ onComplete }: OnboardingProps) {
                 )}
               </div>
               
-              <div className="text-2xl md:text-3xl font-semibold text-foreground">
+              <div className="text-xl sm:text-2xl md:text-3xl font-semibold text-foreground">
                 {result.atLifespan ? "years at" : "years"}
               </div>
               
-              <div className="flex items-center justify-center gap-2 text-lg md:text-xl text-muted-foreground">
+              <div className="flex items-center justify-center gap-2 text-base sm:text-lg md:text-xl text-muted-foreground px-4">
                 {result.atLifespan ? (
                   <span>You've reached the 85-year baseline</span>
                 ) : (
@@ -236,7 +236,7 @@ export function Onboarding({ onComplete }: OnboardingProps) {
                   <Button
                     size="lg"
                     onClick={handleStartStrolling}
-                    className="w-full text-lg h-14 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-glow"
+                    className="w-full text-base sm:text-lg h-12 sm:h-14 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-glow touch-manipulation"
                   >
                     Start Strolling
                     <ArrowRight className="ml-2 h-5 w-5" />
@@ -246,7 +246,7 @@ export function Onboarding({ onComplete }: OnboardingProps) {
                     size="lg"
                     variant="outline"
                     onClick={handleShare}
-                    className="w-full"
+                    className="w-full h-12 sm:h-14 touch-manipulation"
                   >
                     <Share2 className="mr-2 h-4 w-4" />
                     Share My Result
@@ -261,9 +261,9 @@ export function Onboarding({ onComplete }: OnboardingProps) {
   }
 
   return (
-    <div className="fixed inset-0 z-50 bg-gradient-to-br from-background via-primary/5 to-background animate-fade-in">
-      <div className="h-full flex flex-col items-center justify-center p-6">
-        <div className="max-w-md w-full space-y-8">
+    <div className="fixed inset-0 z-50 bg-gradient-to-br from-background via-primary/5 to-background animate-fade-in safe-top safe-bottom">
+      <div className="h-full flex flex-col items-center justify-center p-4 sm:p-6">
+        <div className="max-w-md w-full space-y-6 sm:space-y-8">
           {/* Progress dots */}
           <div className="flex justify-center gap-2">
             {[1, 2].map((s) => (
@@ -276,14 +276,14 @@ export function Onboarding({ onComplete }: OnboardingProps) {
             ))}
           </div>
 
-          <Card className="p-8 space-y-6 animate-scale-in backdrop-blur bg-card/95 shadow-glow border-primary/20">
+          <Card className="p-6 sm:p-8 space-y-6 animate-scale-in backdrop-blur bg-card/95 shadow-glow border-primary/20">
             {step === 1 && (
               <div className="space-y-6">
                 <div className="space-y-2 text-center">
-                  <h2 className="text-3xl font-bold text-foreground">
+                  <h2 className="text-2xl sm:text-3xl font-bold text-foreground">
                     How old are you?
                   </h2>
-                  <p className="text-muted-foreground">
+                  <p className="text-sm sm:text-base text-muted-foreground">
                     Help us calculate your screen time impact
                   </p>
                 </div>
@@ -302,20 +302,20 @@ export function Onboarding({ onComplete }: OnboardingProps) {
             {step === 2 && (
               <div className="space-y-6">
                 <div className="space-y-2 text-center">
-                  <h2 className="text-3xl font-bold text-foreground">
+                  <h2 className="text-2xl sm:text-3xl font-bold text-foreground">
                     Daily screen time?
                   </h2>
-                  <p className="text-muted-foreground">
+                  <p className="text-sm sm:text-base text-muted-foreground">
                     How many hours do you spend on your phone daily?
                   </p>
                 </div>
 
                 <div className="space-y-4">
                   <div className="text-center">
-                    <div className="text-6xl font-bold text-primary mb-2">
+                    <div className="text-5xl sm:text-6xl font-bold text-primary mb-2">
                       {dailyHours}
                     </div>
-                    <div className="text-lg text-muted-foreground">
+                    <div className="text-base sm:text-lg text-muted-foreground">
                       hours per day
                     </div>
                   </div>
@@ -340,14 +340,14 @@ export function Onboarding({ onComplete }: OnboardingProps) {
             <Button
               size="lg"
               onClick={handleNext}
-              className="w-full text-lg h-14 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70"
+              className="w-full text-base sm:text-lg h-12 sm:h-14 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 touch-manipulation"
             >
               {step < 2 ? "Continue" : "Calculate"}
               <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
           </Card>
 
-          <p className="text-center text-sm text-muted-foreground">
+          <p className="text-center text-xs sm:text-sm text-muted-foreground px-2">
             Your data stays private and secure on your device
           </p>
         </div>

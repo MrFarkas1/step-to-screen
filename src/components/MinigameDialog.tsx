@@ -68,7 +68,7 @@ export const MinigameDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md max-w-[95vw] max-h-[90vh] overflow-y-auto">
         {showResults ? (
           <div className="space-y-6 text-center py-4 relative overflow-hidden">
             {/* Confetti effect */}
@@ -147,7 +147,7 @@ export const MinigameDialog = ({
             
             <div className="mt-4">
               <Card
-                className={`p-6 transition-all relative overflow-hidden ${
+                className={`p-4 sm:p-6 transition-all relative overflow-hidden touch-ripple ${
                   canPlayStepCatcher
                     ? "cursor-pointer hover:shadow-glow hover:scale-[1.02] active:scale-[0.98] bg-gradient-to-br from-card to-primary/5"
                     : "opacity-60 cursor-not-allowed bg-muted"
@@ -168,28 +168,28 @@ export const MinigameDialog = ({
                   </div>
                 )}
                 
-                <div className="flex items-center gap-4">
-                  <div className="text-5xl">{canPlayStepCatcher ? '👣' : '🔒'}</div>
-                  <div className="flex-1">
-                    <h3 className="font-bold text-lg flex items-center gap-2">
+                <div className="flex items-center gap-3 sm:gap-4 flex-col sm:flex-row">
+                  <div className="text-4xl sm:text-5xl">{canPlayStepCatcher ? '👣' : '🔒'}</div>
+                  <div className="flex-1 text-center sm:text-left">
+                    <h3 className="font-bold text-base sm:text-lg flex items-center gap-2 justify-center sm:justify-start">
                       Step Catcher
                       {canPlayStepCatcher && <span className="text-xs">⚡</span>}
                     </h3>
-                    <p className="text-sm text-muted-foreground mb-2">
+                    <p className="text-xs sm:text-sm text-muted-foreground mb-2">
                       Tap falling steps before they hit the ground!
                     </p>
                     {!canPlayStepCatcher ? (
-                      <div className="flex items-center gap-2 text-xs text-primary">
+                      <div className="flex items-center gap-2 text-xs text-primary justify-center sm:justify-start">
                         <Clock className="w-3 h-3" />
                         <span>Played today — Resets at midnight</span>
                       </div>
                     ) : (
-                      <div className="text-xs text-muted-foreground">
+                      <div className="text-xs text-muted-foreground text-center sm:text-left">
                         Earn up to 15 credits! 🎁
                       </div>
                     )}
                   </div>
-                  <Footprints className={`w-8 h-8 ${canPlayStepCatcher ? 'text-primary' : 'text-muted-foreground'}`} />
+                  <Footprints className={`w-6 h-6 sm:w-8 sm:h-8 ${canPlayStepCatcher ? 'text-primary' : 'text-muted-foreground'}`} />
                 </div>
               </Card>
             </div>

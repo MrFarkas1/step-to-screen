@@ -144,17 +144,17 @@ export const StepCatcherGame = ({ onComplete, onClose }: StepCatcherGameProps) =
   }
 
   return (
-    <div className="fixed inset-0 bg-gradient-to-b from-sky-100 via-blue-50 to-blue-100 dark:from-sky-950 dark:via-blue-950 dark:to-blue-900 z-50 flex flex-col animate-fade-in">
+    <div className="fixed inset-0 bg-gradient-to-b from-sky-100 via-blue-50 to-blue-100 dark:from-sky-950 dark:via-blue-950 dark:to-blue-900 z-50 flex flex-col animate-fade-in safe-top safe-bottom">
       {/* Header with stats */}
-      <div className="flex items-center justify-between p-4 bg-card/80 backdrop-blur-sm border-b shadow-sm">
-        <div className="flex gap-3 items-center">
-          <Badge variant="secondary" className="text-base font-bold px-3">
+      <div className="flex items-center justify-between p-3 sm:p-4 bg-card/80 backdrop-blur-sm border-b shadow-sm">
+        <div className="flex gap-2 sm:gap-3 items-center flex-wrap">
+          <Badge variant="secondary" className="text-sm sm:text-base font-bold px-2 sm:px-3">
             Score: {score}
           </Badge>
-          <Badge variant={timeLeft <= 5 ? "destructive" : "default"} className="text-base font-bold px-3">
+          <Badge variant={timeLeft <= 5 ? "destructive" : "default"} className="text-sm sm:text-base font-bold px-2 sm:px-3">
             {timeLeft}s
           </Badge>
-          <Badge variant={missed >= 7 ? "destructive" : "outline"} className="text-sm px-2">
+          <Badge variant={missed >= 7 ? "destructive" : "outline"} className="text-xs sm:text-sm px-2">
             Miss: {missed}/10
           </Badge>
         </div>
@@ -162,7 +162,7 @@ export const StepCatcherGame = ({ onComplete, onClose }: StepCatcherGameProps) =
           variant="ghost" 
           size="icon"
           onClick={handleExitClick}
-          className="hover:bg-destructive/10"
+          className="hover:bg-destructive/10 touch-manipulation min-w-[44px] min-h-[44px]"
         >
           <X className="w-5 h-5" />
         </Button>
@@ -185,7 +185,7 @@ export const StepCatcherGame = ({ onComplete, onClose }: StepCatcherGameProps) =
           <button
             key={step.id}
             onClick={(e) => catchStep(step.id, step.x, step.y, e)}
-            className="absolute transition-none cursor-pointer hover:scale-110 active:scale-90 touch-manipulation p-4 -m-4"
+            className="absolute transition-none cursor-pointer hover:scale-110 active:scale-90 touch-manipulation p-6 -m-6 min-w-[56px] min-h-[56px] flex items-center justify-center"
             style={{
               left: `${step.x}px`,
               top: `${step.y}px`,
@@ -195,7 +195,7 @@ export const StepCatcherGame = ({ onComplete, onClose }: StepCatcherGameProps) =
           >
             <div className="relative">
               <div className="absolute inset-0 bg-primary/20 rounded-full blur-xl scale-150 animate-pulse" />
-              <Footprints className="w-12 h-12 text-primary drop-shadow-lg relative" />
+              <Footprints className="w-10 h-10 sm:w-12 sm:h-12 text-primary drop-shadow-lg relative" />
             </div>
           </button>
         ))}
@@ -229,31 +229,31 @@ export const StepCatcherGame = ({ onComplete, onClose }: StepCatcherGameProps) =
 
         {/* Instruction hint */}
         {score === 0 && timeLeft > 18 && (
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center animate-fade-in pointer-events-none">
-            <div className="text-2xl font-bold text-foreground/70 mb-2">👇</div>
-            <div className="text-lg font-medium text-muted-foreground">Tap the falling steps!</div>
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center animate-fade-in pointer-events-none px-4">
+            <div className="text-3xl sm:text-2xl font-bold text-foreground/70 mb-2">👇</div>
+            <div className="text-base sm:text-lg font-medium text-muted-foreground">Tap the falling steps!</div>
           </div>
         )}
       </div>
 
       {/* Exit confirmation dialog */}
       {showExitConfirm && (
-        <div className="absolute inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center z-10 animate-fade-in">
-          <div className="bg-card p-6 rounded-lg shadow-xl max-w-sm mx-4 space-y-4 animate-scale-in">
-            <h3 className="text-xl font-bold">Exit Game?</h3>
-            <p className="text-muted-foreground">You'll lose your current progress and score won't count.</p>
-            <div className="flex gap-3">
+        <div className="absolute inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center z-10 animate-fade-in p-4">
+          <div className="bg-card p-6 rounded-lg shadow-xl max-w-sm w-full mx-4 space-y-4 animate-scale-in">
+            <h3 className="text-lg sm:text-xl font-bold">Exit Game?</h3>
+            <p className="text-sm sm:text-base text-muted-foreground">You'll lose your current progress and score won't count.</p>
+            <div className="flex gap-3 flex-col sm:flex-row">
               <Button
                 variant="outline"
                 onClick={() => setShowExitConfirm(false)}
-                className="flex-1"
+                className="flex-1 touch-manipulation min-h-[44px]"
               >
                 Keep Playing
               </Button>
               <Button
                 variant="destructive"
                 onClick={confirmExit}
-                className="flex-1"
+                className="flex-1 touch-manipulation min-h-[44px]"
               >
                 Exit
               </Button>

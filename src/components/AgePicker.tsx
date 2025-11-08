@@ -87,9 +87,9 @@ export function AgePicker({ value, onChange, min = 1, max = 85 }: AgePickerProps
   }, []);
 
   return (
-    <div className="relative w-full max-w-xs mx-auto">
+    <div className="relative w-full max-w-xs mx-auto touch-manipulation">
       {/* Top fade overlay for depth */}
-      <div className="absolute top-0 left-0 right-0 h-28 bg-gradient-to-b from-background via-background/98 to-transparent z-10 pointer-events-none rounded-t-lg" />
+      <div className="absolute top-0 left-0 right-0 h-24 sm:h-28 bg-gradient-to-b from-background via-background/98 to-transparent z-10 pointer-events-none rounded-t-lg" />
       
       {/* Scrollable container */}
       <div
@@ -100,7 +100,7 @@ export function AgePicker({ value, onChange, min = 1, max = 85 }: AgePickerProps
         className={cn(
           "h-[180px] overflow-y-auto overflow-x-hidden snap-y snap-mandatory",
           "focus:outline-none focus:ring-2 focus:ring-primary/50 rounded-lg",
-          "scrollbar-hide relative"
+          "scrollbar-hide relative touch-manipulation gpu-accelerate"
         )}
         style={{
           paddingTop: `${ITEM_HEIGHT}px`,
@@ -123,8 +123,8 @@ export function AgePicker({ value, onChange, min = 1, max = 85 }: AgePickerProps
             <div
               key={age}
               className={cn(
-                "flex items-center justify-center cursor-pointer select-none",
-                "transition-all ease-out",
+                "flex items-center justify-center cursor-pointer select-none touch-manipulation",
+                "transition-all ease-out min-h-[44px]",
                 isSelected && !isScrolling ? "duration-300" : "duration-200"
               )}
               style={{ 
@@ -159,10 +159,10 @@ export function AgePicker({ value, onChange, min = 1, max = 85 }: AgePickerProps
       </div>
       
       {/* Bottom fade overlay for depth */}
-      <div className="absolute bottom-0 left-0 right-0 h-28 bg-gradient-to-t from-background via-background/98 to-transparent z-10 pointer-events-none rounded-b-lg" />
+      <div className="absolute bottom-0 left-0 right-0 h-24 sm:h-28 bg-gradient-to-t from-background via-background/98 to-transparent z-10 pointer-events-none rounded-b-lg" />
       
       {/* Instructions */}
-      <p className="text-center text-sm text-muted-foreground mt-4">
+      <p className="text-center text-xs sm:text-sm text-muted-foreground mt-4">
         Scroll or use arrow keys to select
       </p>
     </div>

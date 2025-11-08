@@ -27,14 +27,14 @@ export const MobileStepCounter = ({ steps, dailyGoal }: MobileStepCounterProps) 
       {/* Main Circle Display */}
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
-          <div className="flex flex-col items-center justify-center py-12 interactive-card rounded-2xl">
-            <div className="relative w-64 h-64">
+          <div className="flex flex-col items-center justify-center py-8 md:py-12 interactive-card rounded-2xl touch-ripple gpu-accelerate">
+            <div className="relative w-56 h-56 sm:w-64 sm:h-64 md:w-72 md:h-72">
               {/* Circular Progress */}
-              <svg className="w-64 h-64 transform -rotate-90">
+              <svg className="w-56 h-56 sm:w-64 sm:h-64 md:w-72 md:h-72 transform -rotate-90" viewBox="0 0 256 256">
             <circle
               cx="128"
               cy="128"
-              r="112"
+              r="110"
               stroke="currentColor"
               strokeWidth="12"
               fill="none"
@@ -43,12 +43,12 @@ export const MobileStepCounter = ({ steps, dailyGoal }: MobileStepCounterProps) 
             <circle
               cx="128"
               cy="128"
-              r="112"
+              r="110"
               stroke="url(#gradient)"
               strokeWidth="12"
               fill="none"
-              strokeDasharray={`${2 * Math.PI * 112}`}
-              strokeDashoffset={`${2 * Math.PI * 112 * (1 - progress / 100)}`}
+              strokeDasharray={`${2 * Math.PI * 110}`}
+              strokeDashoffset={`${2 * Math.PI * 110 * (1 - progress / 100)}`}
               className="transition-all duration-500"
               strokeLinecap="round"
             />
@@ -61,11 +61,11 @@ export const MobileStepCounter = ({ steps, dailyGoal }: MobileStepCounterProps) 
           </svg>
           
           {/* Center Content */}
-          <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <div className="text-6xl font-bold text-foreground mb-1">
+          <div className="absolute inset-0 flex flex-col items-center justify-center px-4">
+            <div className="text-4xl sm:text-5xl md:text-6xl font-bold text-foreground mb-1 leading-none">
               {steps.toLocaleString()}
             </div>
-            <div className="text-sm text-muted-foreground">steps today</div>
+            <div className="text-xs sm:text-sm text-muted-foreground">steps today</div>
             {isGoalMet && (
               <div className="mt-3 px-4 py-1.5 bg-primary/10 rounded-full flex items-center gap-1.5">
                 <TrendingUp className="w-4 h-4 text-primary" />

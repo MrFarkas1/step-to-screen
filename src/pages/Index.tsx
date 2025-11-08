@@ -72,19 +72,19 @@ const Index = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background pb-safe">
+    <div className="min-h-screen bg-background pb-safe safe-bottom">
       <div className="max-w-md mx-auto">
         {/* Header */}
-        <div className="px-6 pt-safe pt-8 pb-4 flex items-start justify-between">
+        <div className="px-4 sm:px-6 pt-safe safe-top pt-6 sm:pt-8 pb-4 flex items-start justify-between">
           <button 
             onClick={() => setMinigameOpen(true)}
-            className="group relative"
+            className="group relative touch-manipulation"
             title="✨ Hidden Games"
           >
-            <h1 className="text-2xl font-bold text-foreground transition-all group-hover:text-primary group-hover:scale-105 cursor-pointer">
+            <h1 className="text-xl sm:text-2xl font-bold text-foreground transition-all group-hover:text-primary group-hover:scale-105 cursor-pointer">
               StrollScroll
             </h1>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-xs sm:text-sm text-muted-foreground">
               Turn your steps into screen time
             </p>
             <span className="absolute -top-2 -right-2 text-xs opacity-0 group-hover:opacity-100 transition-opacity animate-pulse">
@@ -104,7 +104,7 @@ const Index = () => {
         </div>
 
         {/* Main Content */}
-        <div className="px-6 space-y-4">
+        <div className="px-4 sm:px-6 space-y-4">
           {/* Step Counter Circle */}
           <MobileStepCounter steps={steps} dailyGoal={dailyGoal} />
 
@@ -132,7 +132,7 @@ const Index = () => {
           />
 
           {/* Achievements Button */}
-          <div className="flex justify-center">
+          <div className="flex justify-center pb-4">
             <AchievementsSheet achievements={gamification.achievements} />
           </div>
 
