@@ -1,6 +1,7 @@
 import { Settings, Moon, Sun, Zap, Target, RefreshCw, Trash2 } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useState } from "react";
+import { AppRestrictionsSettings } from "./AppRestrictionsSettings";
 import {
   Sheet,
   SheetContent,
@@ -200,6 +201,11 @@ export function SettingsSheet({
               Recalculate My Screen Life
             </Button>
           </div>
+
+          <Separator />
+
+          {/* App Restrictions */}
+          <AppRestrictionsSettings />
 
           <Separator />
 

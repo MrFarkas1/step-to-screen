@@ -7,6 +7,7 @@ import { ArrowRight, Sparkles, Share2 } from "lucide-react";
 import { useOnboarding } from "@/hooks/useOnboarding";
 import { toast } from "sonner";
 import { AgePicker } from "@/components/AgePicker";
+import { AppRestrictionsOnboarding } from "@/components/AppRestrictionsOnboarding";
 
 interface OnboardingProps {
   onComplete: () => void;
@@ -18,6 +19,7 @@ export function Onboarding({ onComplete }: OnboardingProps) {
   const [age, setAge] = useState(data.age || 25);
   const [dailyHours, setDailyHours] = useState(data.dailyHours || 5);
   const [showResult, setShowResult] = useState(false);
+  const [showAppRestrictions, setShowAppRestrictions] = useState(false);
   const [animatedYears, setAnimatedYears] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
 
@@ -105,6 +107,25 @@ export function Onboarding({ onComplete }: OnboardingProps) {
       toast.success("Result copied to clipboard!");
     }
   };
+
+  const handleStartStrolling = () => {
+    setShowAppRestrictions(true);
+  };
+
+  const handleAppRestrictionsComplete = () => {
+    onComplete();
+  };
+
+  // Show app restrictions after result
+  if (showAppRestrictions) {
+    return (
+      <div className="fixed inset-0 z-50 bg-gradient-to-br from-background via-primary/5 to-background animate-fade-in">
+        <div className="h-full flex flex-col items-center justify-center p-6">
+          <AppRestrictionsOnboarding onComplete={handleAppRestrictionsComplete} />
+        </div>
+      </div>
+    );
+  }
 
   if (showResult) {
     const result = calculateWastedYears(age, dailyHours);
@@ -207,7 +228,7 @@ export function Onboarding({ onComplete }: OnboardingProps) {
                 <div className="flex flex-col gap-3 pt-4">
                   <Button
                     size="lg"
-                    onClick={onComplete}
+                    onClick={handleStartStrolling}
                     className="w-full text-lg h-14 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-glow"
                   >
                     Start Strolling
